@@ -1,0 +1,34 @@
+version: "3.8"
+
+volumes:
+  local_postgres_data: {}
+  local_postgres_data_backups: {}
+
+services:
+  django:
+    links:
+      - "db"
+      - "db:postgres"
+    build:
+      context: .
+      dockerfile: ./conf/compose/django/Dockerfile
+    image: url_shortener_django
+    depends_on:
+      - db
+    volumes:
+      - ./api:/app
+    env_file:
+      - ./conf/env/django
+      - ./conf/env/postgres
+    ports:
+      - "8000:8000"
+    restart: on-failure
+    command: /start
+  db:
+    image: postgres:12.3
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data
+      - local_postgres_data_backups:/backups
+    restart: on-failure
+    env_file:
+      - ./conf/env/postgres
