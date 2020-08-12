@@ -15,4 +15,3 @@ class Url(models.Model):
         db_index=True, default=expires_at_default
     )
     clicks = models.PositiveIntegerField(default=0)
-
