@@ -8,5 +8,6 @@ router = routers.DefaultRouter()
 router.register(r"urls", views.UrlViewSet)
 
 urlpatterns = [
-    path("", include(router.urls)),
+    path(r"api/", include(router.urls)),
+    path(r"<slug:slug>", views.follow, name="shortener-follow"),
 ]
