@@ -5,7 +5,7 @@ from .models import Url
 class UrlSerializer(serializers.ModelSerializer):
     class Meta:
         model = Url
-        fields = ["slug", "full_url", "expires_at"]
+        fields = ["slug", "full_url", "expires_at", "created_at", "clicks"]
         read_only_fields = ["created_at", "clicks"]
 
     def get_fields(self, *args, **kwargs):
