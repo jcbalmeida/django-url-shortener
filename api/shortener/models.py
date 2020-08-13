@@ -17,6 +17,10 @@ class Url(models.Model):
     )
     clicks = models.PositiveIntegerField(default=0)
 
+    def register_click(self):
+        self.clicks = models.F("clicks") + 1
+        self.save()
+
     def save(self, *args, **kwargs):
         if self._state.adding and not self.slug:
             self.slug = base62.random(5)  # TODO: parametrizar
