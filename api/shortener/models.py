@@ -2,10 +2,11 @@ from django.db import models
 from django.utils.timezone import now
 from datetime import timedelta
 from .utils import base62
+from django.conf import settings
 
 
 def expires_at_default():
-    return now() + timedelta(days=7)  # TODO: parametrizar
+    return now() + timedelta(seconds=settings.SHORTENER_DEFAULT_DURATION)
 
 
 class Url(models.Model):
