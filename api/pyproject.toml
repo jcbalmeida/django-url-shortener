@@ -13,6 +13,7 @@ django-environ = "^0.4.5"
 markdown = "^3.2.2"
 django-filter = "^2.3.0"
 django-cacheops = "^5.0.1"
+celery = "^4.4.7"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.17.0"
