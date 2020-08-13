@@ -31,6 +31,7 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "cacheops",
 ]
 
 LOCAL_APPS = [
@@ -118,4 +119,14 @@ STATIC_URL = "/static/"
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",  # noqa: E501
     "PAGE_SIZE": 10,
+}
+
+
+# django-cacheops
+CACHEOPS_REDIS = env("CACHEOPS_REDIS", default="redis://redis:6379/1")
+CACHEOPS = {
+    "shortener.url": {
+        "ops": "get",
+        "timeout": env("CACHEOPS_TIMEOUT", default=900),  # 15 minutes
+    }
 }
