@@ -1,6 +1,6 @@
 from pathlib import Path
 import environ
-
+from celery.schedules import crontab
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 env = environ.Env(DEBUG=(bool, False))
@@ -131,9 +131,17 @@ CACHEOPS = {
     }
 }
 
-# Celery Beat
+# Celery
 CELERY_BROKER_URL = "redis://redis:6379"
 CELERY_RESULT_BACKEND = "redis://redis:6379"
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
+
+# Celery Beat
+CELERY_BEAT_SCHEDULE = {
+    "clear_expired_links": {
+        "task": "shortener.tasks.clear_expired_links",
+        "schedule": crontab(minute="*/5"),  # execute every five minutes
+    }
+}
