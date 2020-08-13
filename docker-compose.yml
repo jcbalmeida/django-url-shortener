@@ -6,16 +6,23 @@ volumes:
   redis_data: {}
 
 services:
+  postgres:
+    image: postgres:12.3
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data
+      - local_postgres_data_backups:/backups
+    restart: on-failure
+    env_file:
+      - ./conf/env/postgres
+  redis:
+    image: "redis:alpine"
   django:
-    links:
-      - "db"
-      - "db:postgres"
     build:
       context: .
       dockerfile: ./conf/compose/django/Dockerfile
     image: url_shortener_django
     depends_on:
-      - db
+      - postgres
       - redis
     volumes:
       - ./api:/app
@@ -26,14 +33,29 @@ services:
       - "8000:8000"
     restart: on-failure
     command: /start
-  db:
-    image: postgres:12.3
+  celery:
+    build:
+      context: .
+      dockerfile: ./conf/compose/django/Dockerfile
+    command: celery -A config worker -l info
     volumes:
-      - local_postgres_data:/var/lib/postgresql/data
-      - local_postgres_data_backups:/backups
-    restart: on-failure
+      - ./api:/app
     env_file:
+      - ./conf/env/django
       - ./conf/env/postgres
-  redis:
-    image: redis:6-alpine
-    command: redis-server
+    depends_on:
+      - postgres
+      - redis
+  celery-beat:
+    build:
+      context: .
+      dockerfile: ./conf/compose/django/Dockerfile
+    command: celery -A config beat -l info
+    volumes:
+      - ./api:/app
+    env_file:
+      - ./conf/env/django
+      - ./conf/env/postgres
+    depends_on:
+      - postgres
+      - redis
