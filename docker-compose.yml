@@ -3,6 +3,7 @@ version: "3.8"
 volumes:
   local_postgres_data: {}
   local_postgres_data_backups: {}
+  redis_data: {}
 
 services:
   django:
@@ -15,6 +16,7 @@ services:
     image: url_shortener_django
     depends_on:
       - db
+      - redis
     volumes:
       - ./api:/app
     env_file:
@@ -32,3 +34,6 @@ services:
     restart: on-failure
     env_file:
       - ./conf/env/postgres
+  redis:
+    image: redis:6-alpine
+    command: redis-server
