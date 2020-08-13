@@ -121,6 +121,11 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
 }
 
+# Shortener app
+SHORTENER_DEFAULT_DURATION = env(
+    "SHORTENER_DEFAULT_DURATION", default=604800
+)  # 7 days
+
 
 # django-cacheops
 CACHEOPS_REDIS = env("CACHEOPS_REDIS", default="redis://redis:6379/1")
@@ -132,8 +137,8 @@ CACHEOPS = {
 }
 
 # Celery
-CELERY_BROKER_URL = "redis://redis:6379"
-CELERY_RESULT_BACKEND = "redis://redis:6379"
+CELERY_BROKER_URL = env("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND")
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
