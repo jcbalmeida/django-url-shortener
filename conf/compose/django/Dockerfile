@@ -16,8 +16,12 @@ RUN apk update \
   && apk add postgresql-client \
   && apk add make
 
-COPY ./conf/compose/django/requirements.txt ./
-RUN pip install -r requirements.txt
+RUN pip install poetry
+WORKDIR /app
+COPY ./api/pyproject.toml ./api/poetry.lock /app/
+
+RUN poetry config virtualenvs.create false \
+  && poetry install --no-interaction --no-ansi
 
 COPY ./conf/compose/django/entrypoint /entrypoint
 RUN sed -i 's/\r//' /entrypoint
