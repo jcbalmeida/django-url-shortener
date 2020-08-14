@@ -22,6 +22,9 @@ class Url(models.Model):
         self.clicks = models.F("clicks") + 1
         self.save()
 
+    def get_short_url(self):
+        return "{}/{}".format(settings.BASE_URL, self.slug)
+
     def save(self, *args, **kwargs):
         if self._state.adding and not self.slug:
             self.slug = base62.random(5)  # TODO: parametrizar

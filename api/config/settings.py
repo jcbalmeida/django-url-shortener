@@ -8,6 +8,8 @@ READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
 if READ_DOT_ENV_FILE:
     env.read_env(str(BASE_DIR.path(".env")))
 
+BASE_URL = "http://localhost:8000"
+
 
 DEBUG = env.bool("DJANGO_DEBUG", False)
 SECRET_KEY = env("SECRET_KEY")
