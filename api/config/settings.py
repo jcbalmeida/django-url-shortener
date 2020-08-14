@@ -1,5 +1,6 @@
 from pathlib import Path
 import environ
+import datetime
 from celery.schedules import crontab
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -121,6 +122,11 @@ STATIC_URL = "/static/"
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",  # noqa: E501
     "PAGE_SIZE": 10,
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_jwt.authentication.JSONWebTokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.BasicAuthentication",
+    ),
 }
 
 # Shortener app
@@ -152,4 +158,11 @@ CELERY_BEAT_SCHEDULE = {
         "task": "shortener.tasks.clear_expired_links",
         "schedule": crontab(minute="*/5"),  # execute every five minutes
     }
+}
+
+# JWT
+JWT_AUTH = {
+    "JWT_ALLOW_REFRESH": True,
+    "JWT_EXPIRATION_DELTA": datetime.timedelta(hours=1),
+    "JWT_REFRESH_EXPIRATION_DELTA": datetime.timedelta(days=7),
 }
