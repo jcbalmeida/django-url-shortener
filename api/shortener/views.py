@@ -7,7 +7,7 @@ from .serializers import UrlSerializer
 
 
 class UrlViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Url.objects.all()
     serializer_class = UrlSerializer
 
