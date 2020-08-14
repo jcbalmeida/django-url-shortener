@@ -3,10 +3,8 @@ from .models import Url
 
 
 class UrlSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Url
-        fields = ["slug", "full_url", "expires_at", "created_at", "clicks"]
-        read_only_fields = ["created_at", "clicks"]
+
+    short_url = serializers.URLField(source="get_short_url")
 
     def get_fields(self, *args, **kwargs):
         fields = super().get_fields(*args, **kwargs)
@@ -18,3 +16,15 @@ class UrlSerializer(serializers.ModelSerializer):
             elif method == "PUT":
                 fields["slug"].read_only = True
         return fields
+
+    class Meta:
+        model = Url
+        fields = [
+            "slug",
+            "short_url",
+            "full_url",
+            "expires_at",
+            "created_at",
+            "clicks",
+        ]
+        read_only_fields = ["short_url", "created_at", "clicks"]

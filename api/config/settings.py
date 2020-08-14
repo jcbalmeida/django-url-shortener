@@ -1,12 +1,14 @@
 from pathlib import Path
 import environ
-
+from celery.schedules import crontab
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 env = environ.Env(DEBUG=(bool, False))
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
 if READ_DOT_ENV_FILE:
     env.read_env(str(BASE_DIR.path(".env")))
+
+BASE_URL = "http://localhost:8000"
 
 
 DEBUG = env.bool("DJANGO_DEBUG", False)
@@ -121,6 +123,12 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
 }
 
+# Shortener app
+SHORTENER_DEFAULT_LENGTH = env("SHORTENER_DEFAULT_LENGTH", default=5)
+SHORTENER_DEFAULT_DURATION = env(
+    "SHORTENER_DEFAULT_DURATION", default=604800
+)  # 7 days
+
 
 # django-cacheops
 CACHEOPS_REDIS = env("CACHEOPS_REDIS", default="redis://redis:6379/1")
@@ -128,5 +136,20 @@ CACHEOPS = {
     "shortener.url": {
         "ops": "get",
         "timeout": env("CACHEOPS_TIMEOUT", default=900),  # 15 minutes
+    }
+}
+
+# Celery
+CELERY_BROKER_URL = env("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND")
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+
+# Celery Beat
+CELERY_BEAT_SCHEDULE = {
+    "clear_expired_links": {
+        "task": "shortener.tasks.clear_expired_links",
+        "schedule": crontab(minute="*/5"),  # execute every five minutes
     }
 }
