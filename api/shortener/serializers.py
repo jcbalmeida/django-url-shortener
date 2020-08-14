@@ -4,7 +4,7 @@ from .models import Url
 
 class UrlSerializer(serializers.ModelSerializer):
 
-    short_url = serializers.URLField(source="get_short_url")
+    short_url = serializers.URLField(source="get_short_url", read_only=True)
 
     def get_fields(self, *args, **kwargs):
         fields = super().get_fields(*args, **kwargs)
