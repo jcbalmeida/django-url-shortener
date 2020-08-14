@@ -13,6 +13,7 @@ class UrlSerializer(serializers.ModelSerializer):
             method = getattr(request, "method", None)
             if method == "POST":
                 fields["slug"].allow_blank = True
+                fields["slug"].required = False
             elif method == "PUT":
                 fields["slug"].read_only = True
         return fields
