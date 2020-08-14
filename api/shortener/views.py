@@ -14,6 +14,7 @@ class UrlViewSet(viewsets.ModelViewSet):
 
 @require_GET
 def follow(request, slug):
+    permission_classes = [permissions.AllowAny]  # noqa: F841
     instance = get_object_or_404(Url, pk=slug)
     instance.register_click()
     return redirect(instance.full_url)
