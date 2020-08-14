@@ -9,5 +9,5 @@ router.register(r"urls", views.UrlViewSet)
 
 urlpatterns = [
     path(r"api/", include(router.urls)),
-    path(r"<slug:slug>", views.follow, name="shortener-follow"),
+    path(r"<slug:slug>", views.follow, name="follow"),
 ]
