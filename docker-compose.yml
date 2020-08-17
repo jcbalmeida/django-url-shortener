@@ -59,3 +59,14 @@ services:
     depends_on:
       - postgres
       - redis
+  frontend:
+    build:
+      context: .
+      dockerfile: ./conf/compose/frontend/Dockerfile
+    image: url_shortener_frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: yarn serve
+    ports:
+      - "8080:8080"
