@@ -7,7 +7,7 @@ from .serializers import UrlSerializer
 
 
 class UrlViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
     queryset = Url.objects.all()
     serializer_class = UrlSerializer
 
