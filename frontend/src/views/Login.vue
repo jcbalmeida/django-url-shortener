@@ -17,9 +17,11 @@
 </template>
 <script>
 import axios from "axios";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "login",
+  computed: { ...mapState(["access_token", "refresh_token"]) },
   data() {
     return {
       username: "",
@@ -28,6 +30,7 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["updateAccessToken", "updateRefreshToken"]),
     login: function() {
       axios
         .post("http://localhost:8000/token/", {
@@ -35,11 +38,12 @@ export default {
           password: this.password
         })
         .then(response => {
-          console.log(response);
+          this.$store.dispatch("updateAccessToken", response.data.access);
+          this.$store.dispatch("updateRefreshToken", response.data.refresh);
           this.$router.replace("/");
         })
         .catch(e => {
-          console.debug(e);
+          return Promise.reject(e);
         });
     }
   }
